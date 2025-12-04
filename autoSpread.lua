@@ -167,6 +167,11 @@ local function storageScan()
                 if storage.isSlotOccupied(slot) then
                     storage.removeFromStorage(slot)
                 end
+            elseif crop.size >= crop.max - 1 then
+                action.harvest()
+                if storage.isSlotOccupied(slot) then
+                    storage.removeFromStorage(slot)
+                end
             end
         end
     end
