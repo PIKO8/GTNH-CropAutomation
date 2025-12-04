@@ -54,7 +54,7 @@ local function checkChild(slot, crop)
 
                 if config.useGrowthMode then
                     if storage.hasFreeSlots() then
-                        local free = storage.getFreeSlot()
+                        local free = storage.nextStorageSlot()
                         action.transplant(gps.workingSlotToPos(slot), gps.storageSlotToPos(free))
                         storage.addToStorage(crop, free)
                         action.placeCropStick(2)
