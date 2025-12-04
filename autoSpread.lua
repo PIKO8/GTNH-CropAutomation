@@ -100,6 +100,33 @@ local function checkParent(slot, crop)
     end
 end
 
+-- ==================== STORAGE SCAN ====================
+
+local function storageScan()
+    for slot=1, config.storageFarmArea, 1 do
+        os.sleep(0)
+
+        gps.go(gps.storageSlotToPos(slot))
+        local crop = scanner.scan()
+        if scanner.cropAirOrEmpty(crop) and storage.isSlotOccupied(slot) then
+            storage.removeFromStorage(slot)
+        elseif scanner.cropNonAirOrEmpty(crop) then
+            if scanner.isWeed(crop, 'storage') then
+                action.deweed()
+                action.harvest()
+                if storage.isSlotOccupied(slot) then
+                    storage.removeFromStorage(slot)
+                end
+            elseif crop.size >= crop.max - 1 or crop.name ~= targetCrop then
+                action.harvest()
+                if storage.isSlotOccupied(slot) then
+                    storage.removeFromStorage(slot)
+                end
+            end
+        end
+    end
+end
+
 -- ====================== THE LOOP ======================
 
 local function spreadOnce(firstRun)
@@ -134,6 +161,12 @@ local function spreadOnce(firstRun)
             if slot == 1 then
                 targetCrop = database.getFarm()[1].name
                 print(string.format('autoSpread: Target %s', targetCrop))
+
+                if config.useGrowthMode and config.startScanStorage then
+                    gps.save()
+                    storageScan()
+                    gps.resume()
+                end
             end
         end
 
@@ -150,33 +183,6 @@ local function spreadOnce(firstRun)
     return true
 end
 
--- ==================== STORAGE SCAN ====================
-
-local function storageScan()
-    for slot=1, config.storageFarmArea, 1 do
-        os.sleep(0)
-
-        gps.go(gps.storageSlotToPos(slot))
-        local crop = scanner.scan()
-        if scanner.cropAirOrEmpty(crop) and storage.isSlotOccupied(slot) then
-            storage.removeFromStorage(slot)
-        elseif scanner.cropNonAirOrEmpty(crop) then
-            if scanner.isWeed(crop, 'storage') then
-                action.deweed()
-                action.harvest()
-                if storage.isSlotOccupied(slot) then
-                    storage.removeFromStorage(slot)
-                end
-            elseif crop.size >= crop.max - 1 then
-                action.harvest()
-                if storage.isSlotOccupied(slot) then
-                    storage.removeFromStorage(slot)
-                end
-            end
-        end
-    end
-end
-
 -- ======================== MAIN ========================
 
 local function main()
@@ -190,11 +196,6 @@ local function main()
     spreadOnce(true)
     action.restockAll()
 
-    if config.useGrowthMode and config.startScanStorage then
-        gps.save()
-        storageScan()
-        gps.resume()
-    end
     -- Loop
     while spreadOnce(false) do
         breedRound = breedRound + 1
