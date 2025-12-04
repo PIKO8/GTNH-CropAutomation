@@ -13,6 +13,7 @@ local config = {
     -- Temp move crops to the storage farm and put it in the chest when it's grown. 
     -- Ignores `config.useStorageFarm`. Stops at maxBreedRound   (Maybe Slow)
     useGrowthMode = false,
+    startScanStorage = false,
     -- Keep crops that are not the target crop during autoSpread and autoStat
     keepMutations = false,
     -- Stat-up crops during autoTier (Very Slow)

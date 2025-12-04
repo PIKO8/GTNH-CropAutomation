@@ -112,7 +112,7 @@ local function spreadOnce(firstRun)
         end
 
         -- Terminal Condition
-        if #database.getStorage() >= config.storageFarmArea then
+        if not config.useGrowthMode and #database.getStorage() >= config.storageFarmArea then
             print('autoSpread: Storage Full!')
             return false
         end
@@ -181,15 +181,20 @@ end
 
 local function main()
     action.initWork()
-    print('autoSpread: Scanning Farm')
     if config.useGrowthMode then
         print('useGrowthMode is enable')
     end
+    print('autoSpread: Scanning Farm')
 
     -- First Run
     spreadOnce(true)
     action.restockAll()
 
+    if config.useGrowthMode and config.startScanStorage then
+        gps.save()
+        storageScan()
+        gps.resume()
+    end
     -- Loop
     while spreadOnce(false) do
         breedRound = breedRound + 1

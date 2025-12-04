@@ -256,6 +256,9 @@ local function initWork()
     events.hookEvents()
     charge()
     database.resetStorage()
+    if config.useGrowthMode then
+        storage.resetStorage()
+    end
     primeBinder()
     restockAll()
 end
