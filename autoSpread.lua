@@ -182,6 +182,9 @@ end
 local function main()
     action.initWork()
     print('autoSpread: Scanning Farm')
+    if config.useGrowthMode then
+        print('useGrowthMode is enable')
+    end
 
     -- First Run
     spreadOnce(true)
