@@ -12,7 +12,8 @@ local scripts = {
     'autoStat.lua',
     'autoTier.lua',
     'autoSpread.lua',
-    'uninstall.lua'
+    'uninstall.lua',
+    'storage.lua'
 }
 
 -- BRANCH

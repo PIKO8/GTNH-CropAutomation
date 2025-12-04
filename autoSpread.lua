@@ -4,6 +4,12 @@ local gps = require('gps')
 local scanner = require('scanner')
 local config = require('config')
 local events = require('events')
+local storage
+if config.useGrowthMode then
+    storage = require('storage')
+else 
+    storage = {}
+end
 local breedRound = 0
 local emptySlot
 local targetCrop
@@ -46,7 +52,17 @@ local function checkChild(slot, crop)
             -- No parent is empty, put in storage
             elseif stat >= config.autoSpreadThreshold then
 
-                if config.useStorageFarm then
+                if config.useGrowthMode then
+                    if storage.hasFreeSlots() then
+                        local free = storage.getFreeSlot()
+                        action.transplant(gps.workingSlotToPos(slot), gps.storageSlotToPos(free))
+                        storage.addToStorage(crop, free)
+                        action.placeCropStick(2)
+                    elseif crop.size >= crop.max - 1 then
+                        action.harvest()
+                        action.placeCropStick(2)
+                    end
+                elseif config.useStorageFarm then
                     action.transplant(gps.workingSlotToPos(slot), gps.storageSlotToPos(database.nextStorageSlot()))
                     database.addToStorage(crop)
                     action.placeCropStick(2)
@@ -134,6 +150,28 @@ local function spreadOnce(firstRun)
     return true
 end
 
+-- ==================== STORAGE SCAN ====================
+
+local function storageScan()
+    for slot=1, config.storageFarmArea, 1 do
+        os.sleep(0)
+
+        gps.go(gps.storageSlotToPos(slot))
+        local crop = scanner.scan()
+        if scanner.cropAirOrEmpty(crop) and storage.isSlotOccupied(slot) then
+            storage.removeFromStorage(slot)
+        elseif scanner.cropNonAirOrEmpty(crop) then
+            if scanner.isWeed(crop, 'storage') then
+                action.deweed()
+                action.harvest()
+                if storage.isSlotOccupied(slot) then
+                    storage.removeFromStorage(slot)
+                end
+            end
+        end
+    end
+end
+
 -- ======================== MAIN ========================
 
 local function main()
@@ -148,6 +186,9 @@ local function main()
     while spreadOnce(false) do
         breedRound = breedRound + 1
         action.restockAll()
+        if config.useGrowthMode and breedRound % config.storageScanInterval == 0 then
+            storageScan()
+        end
     end
 
     -- Terminated Early

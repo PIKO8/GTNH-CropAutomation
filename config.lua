@@ -10,10 +10,16 @@ local config = {
     cleanUp = true,
     -- Moves crops to the storage farm, otherwise dumps everything in the storage chest.
     useStorageFarm = true,
+    -- Temp move crops to the storage farm and put it in the chest when it's grown. 
+    -- Ignores `config.useStorageFarm`. Stops at maxBreedRound   (Maybe Slow)
+    useGrowthMode = false,
     -- Keep crops that are not the target crop during autoSpread and autoStat
     keepMutations = false,
     -- Stat-up crops during autoTier (Very Slow)
     statWhileTiering = false,
+
+    -- Scan the storage farm every N main farm cycles (Only when useGrowthMode is enabled)
+    storageScanInterval = 10,
 
     -- Minimum tier for the working farm during autoTier
     autoTierThreshold = 13,

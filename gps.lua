@@ -55,6 +55,32 @@ local function storageSlotToPos(slot)
     return {x, y}
 end
 
+local function posToStorageSlot(pos)
+    local x, y = pos[1], pos[2]
+    -- Reverse the X offset (+2) applied in storageSlotToPos
+    x = x - 2
+    -- Compute local row index based on column parity (snake pattern)
+    local rowY
+    if x % 2 == 0 then
+        -- Even columns: y = row - storageFarmSize + workingFarmSize + 1
+        -- Solve for row: row = y + storageFarmSize - workingFarmSize - 1
+        rowY = y + config.storageFarmSize - config.workingFarmSize - 1
+    else
+        -- Odd columns: y = -row + workingFarmSize
+        -- Solve for row: row = workingFarmSize - y
+        rowY = config.workingFarmSize - y
+    end
+
+    -- Validate bounds: both x and rowY must be in [0, storageFarmSize)
+    if x < 0 or x >= config.storageFarmSize or rowY < 0 or rowY >= config.storageFarmSize then
+        return nil  -- Position is outside the storage grid
+    end
+
+    -- Convert (x, rowY) to 1-based slot index
+    local slot = x * config.storageFarmSize + rowY + 1
+    return slot
+end
+
 
 local function getFacing()
     return nowFacing
@@ -173,6 +199,7 @@ end
 return {
     workingSlotToPos = workingSlotToPos,
     storageSlotToPos = storageSlotToPos,
+    posToStorageSlot = posToStorageSlot,
     getFacing = getFacing,
     getPos = getPos,
     turnTo = turnTo,

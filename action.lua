@@ -8,6 +8,10 @@ local gps = require('gps')
 local config = require('config')
 local scanner = require('scanner')
 local events = require('events')
+local storage
+if config.useGrowthMode then
+    storage = require('storage')
+end
 local inventory_controller = component.inventory_controller
 local redstone = component.redstone
 local restockAll, cleanUp  -- Forward declaration
@@ -155,8 +159,13 @@ local function transplant(src, dest)
         placeCropStick()
 
     elseif crop.isCrop == false then
-        database.addToStorage(crop)
-        gps.go(gps.storageSlotToPos(database.nextStorageSlot()))
+        if config.useGrowthMode then
+            storage.addToStorage(crop, gps.posToStorageSlot(dest))
+            gps.go(gps.storageSlotToPos(storage.nextStorageSlot()))
+        else
+            database.addToStorage(crop)
+            gps.go(gps.storageSlotToPos(database.nextStorageSlot()))
+        end
         placeCropStick()
     end
 

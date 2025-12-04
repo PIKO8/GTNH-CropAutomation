@@ -55,8 +55,18 @@ local function isWeed(crop, farm)
     end
 end
 
+local function cropAirOrEmpty(crop)
+    return crop.isCrop and (crop.name == "air" or crop.name == "emptyCrop")
+end
+
+local function cropNonAirOrEmpty(crop)
+    return crop.isCrop and crop.name ~= "air" and crop.name ~= "emptyCrop"
+end
 
 return {
     scan = scan,
-    isWeed = isWeed
+    isWeed = isWeed,
+    cropAirOrEmpty = cropAirOrEmpty,
+    cropNonAirOrEmpty = cropNonAirOrEmpty,
+    
 }
