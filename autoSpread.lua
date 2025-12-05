@@ -53,13 +53,13 @@ local function checkChild(slot, crop)
             elseif stat >= config.autoSpreadThreshold then
 
                 if config.useGrowthMode then
-                    if storage.hasFreeSlots() then
+                    if crop.size >= crop.max - 1 then
+                        action.harvest()
+                        action.placeCropStick(2)
+                    elseif storage.hasFreeSlots() then
                         local free = storage.nextStorageSlot()
                         action.transplant(gps.workingSlotToPos(slot), gps.storageSlotToPos(free))
                         storage.addToStorage(crop, free)
-                        action.placeCropStick(2)
-                    elseif crop.size >= crop.max - 1 then
-                        action.harvest()
                         action.placeCropStick(2)
                     end
                 elseif config.useStorageFarm then
@@ -117,7 +117,7 @@ local function storageScan()
                 if storage.isSlotOccupied(slot) then
                     storage.removeFromStorage(slot)
                 end
-            elseif crop.size >= crop.max - 1 or crop.name ~= targetCrop then
+            elseif crop.size >= crop.max - 1 then
                 action.harvest()
                 if storage.isSlotOccupied(slot) then
                     storage.removeFromStorage(slot)
