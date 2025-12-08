@@ -9,7 +9,7 @@ local config = require('config')
 local scanner = require('scanner')
 local events = require('events')
 local storage
-if config.useGrowthMode then
+if config.useAdvancedStorage then
     storage = require('storage')
 end
 local inventory_controller = component.inventory_controller
@@ -159,7 +159,7 @@ local function transplant(src, dest)
         placeCropStick()
 
     elseif crop.isCrop == false then
-        if config.useGrowthMode then
+        if config.useAdvancedStorage then
             storage.addToStorage(crop, gps.posToStorageSlot(dest))
             gps.go(gps.storageSlotToPos(storage.nextStorageSlot()))
         else
@@ -256,7 +256,7 @@ local function initWork()
     events.hookEvents()
     charge()
     database.resetStorage()
-    if config.useGrowthMode then
+    if config.useAdvancedStorage then
         storage.resetStorage()
     end
     primeBinder()

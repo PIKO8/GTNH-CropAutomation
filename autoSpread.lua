@@ -5,7 +5,7 @@ local scanner = require('scanner')
 local config = require('config')
 local events = require('events')
 local storage
-if config.useGrowthMode then
+if config.useAdvancedStorage then
     storage = require('storage')
 else 
     storage = {}
@@ -52,7 +52,7 @@ local function checkChild(slot, crop)
             -- No parent is empty, put in storage
             elseif stat >= config.autoSpreadThreshold then
 
-                if config.useGrowthMode then
+                if config.useAdvancedStorage then
                     if crop.size >= crop.max - 1 then
                         action.harvest()
                         action.placeCropStick(2)
@@ -139,7 +139,7 @@ local function spreadOnce(firstRun)
         end
 
         -- Terminal Condition
-        if not config.useGrowthMode and #database.getStorage() >= config.storageFarmArea then
+        if not config.useAdvancedStorage and #database.getStorage() >= config.storageFarmArea then
             print('autoSpread: Storage Full!')
             return false
         end
@@ -162,7 +162,7 @@ local function spreadOnce(firstRun)
                 targetCrop = database.getFarm()[1].name
                 print(string.format('autoSpread: Target %s', targetCrop))
 
-                if config.useGrowthMode and config.startScanStorage then
+                if config.useAdvancedStorage and config.startScanStorage then
                     gps.save()
                     storageScan()
                     gps.resume()
@@ -187,7 +187,7 @@ end
 
 local function main()
     action.initWork()
-    if config.useGrowthMode then
+    if config.useAdvancedStorage then
         print('useGrowthMode is enable')
     end
     print('autoSpread: Scanning Farm')
@@ -200,7 +200,7 @@ local function main()
     while spreadOnce(false) do
         breedRound = breedRound + 1
         action.restockAll()
-        if config.useGrowthMode and breedRound % config.storageScanInterval == 0 then
+        if config.useAdvancedStorage and breedRound % config.storageScanInterval == 0 then
             storageScan()
         end
     end
