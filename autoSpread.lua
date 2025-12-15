@@ -100,33 +100,6 @@ local function checkParent(slot, crop)
     end
 end
 
--- ==================== STORAGE SCAN ====================
-
-local function storageScan()
-    for slot=1, config.storageFarmArea, 1 do
-        os.sleep(0)
-
-        gps.go(gps.storageSlotToPos(slot))
-        local crop = scanner.scan()
-        if scanner.cropAirOrEmpty(crop) and storage.isSlotOccupied(slot) then
-            storage.removeFromStorage(slot)
-        elseif scanner.cropNonAirOrEmpty(crop) then
-            if scanner.isWeed(crop, 'storage') then
-                action.deweed()
-                action.harvest()
-                if storage.isSlotOccupied(slot) then
-                    storage.removeFromStorage(slot)
-                end
-            elseif crop.size >= crop.max - 1 then
-                action.harvest()
-                if storage.isSlotOccupied(slot) then
-                    storage.removeFromStorage(slot)
-                end
-            end
-        end
-    end
-end
-
 -- ====================== THE LOOP ======================
 
 local function spreadOnce(firstRun)
@@ -164,7 +137,7 @@ local function spreadOnce(firstRun)
 
                 if config.useAdvancedStorage and config.startScanStorage then
                     gps.save()
-                    storageScan()
+                    storage.storageScan()
                     gps.resume()
                 end
             end
@@ -188,7 +161,7 @@ end
 local function main()
     action.initWork()
     if config.useAdvancedStorage then
-        print('useGrowthMode is enable')
+        print('autoSpread: Advanced Storage Mode Enabled')
     end
     print('autoSpread: Scanning Farm')
 
@@ -201,7 +174,7 @@ local function main()
         breedRound = breedRound + 1
         action.restockAll()
         if config.useAdvancedStorage and breedRound % config.storageScanInterval == 0 then
-            storageScan()
+            storage.storageScan()
         end
     end
 

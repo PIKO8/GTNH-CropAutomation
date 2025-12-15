@@ -1,6 +1,9 @@
 -- non-linear database for storage farm
 
 local config = require('config')
+local scanner = require('scanner')
+local action = require('action')
+local gps = require('gps')
 
 -- Main storage: key - slot number, value - crop or nil if empty
 local storage = {}
@@ -127,6 +130,29 @@ local function isSlotOccupied(slot)
     return storage[slot] ~= nil
 end
 
+-- ==================== STORAGE SCAN ====================
+
+local function storageScan()
+    for slot=1, config.storageFarmArea, 1 do
+        os.sleep(0)
+
+        gps.go(gps.storageSlotToPos(slot))
+        local crop = scanner.scan()
+        if scanner.cropAirOrEmpty(crop) and storage.isSlotOccupied(slot) then
+            storage.removeFromStorage(slot)
+        elseif scanner.cropNonAirOrEmpty(crop) then
+            if scanner.isWeed(crop, 'storage') or crop.size >= crop.max - 1 then
+                action.deweed()
+                action.harvest()
+                if storage.isSlotOccupied(slot) then
+                    storage.removeFromStorage(slot)
+                end
+            end
+        end
+    end
+end
+
+
 -- Initialize storage on load
 initializeStorage()
 
@@ -142,5 +168,6 @@ return {
     existInStorage = existInStorage,
     getCropBySlot = getCropBySlot,
     isSlotOccupied = isSlotOccupied,
+    storageScan = storageScan,
     totalSlots = totalSlots
 }

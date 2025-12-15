@@ -250,7 +250,6 @@ function restockAll()
     charge()
 end
 
-
 local function initWork()
     events.initEvents()
     events.hookEvents()
