@@ -8,7 +8,8 @@ function uninstall(scripts)
     end
 end
 
-if require("util").is_main({...}, 'uninstall') then
+local util = require("util")
+if util.is_main({...}, 'uninstall') then
     local scripts = require('setup').scripts
     uninstall(scripts)
 end

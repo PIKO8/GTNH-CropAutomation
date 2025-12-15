@@ -29,7 +29,8 @@ function update()
     setup.install()
 end
 
-if require("util").is_main({...}, "update") then
+local util = require("util")
+if util.is_main({...}, "update") then
     update()
 end
 

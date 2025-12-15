@@ -156,7 +156,8 @@ end
 -- Initialize storage on load
 initializeStorage()
 
-if require('util').is_main({...}, 'storage') then
+local util = require("util")
+if util.is_main({...}, 'storage') then
     action.initWork()
     storageScan()
 end
