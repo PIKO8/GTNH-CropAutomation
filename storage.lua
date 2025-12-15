@@ -1,6 +1,5 @@
 -- non-linear database for storage farm
 
-local action = require('action')
 local gps = require('gps')
 local scanner = require('scanner')
 local config = require('config')
@@ -133,6 +132,7 @@ end
 -- ==================== STORAGE SCAN ====================
 
 local function storageScan()
+    local action = require('action')
     for slot=1, config.storageFarmArea, 1 do
         os.sleep(0)
 
