@@ -1,9 +1,9 @@
 -- non-linear database for storage farm
 
-local config = require('config')
-local scanner = require('scanner')
 local action = require('action')
 local gps = require('gps')
+local scanner = require('scanner')
+local config = require('config')
 
 -- Main storage: key - slot number, value - crop or nil if empty
 local storage = {}
@@ -157,6 +157,7 @@ end
 initializeStorage()
 
 if require('util').is_main({...}, 'storage') then
+    action.initWork()
     storageScan()
 end
 
