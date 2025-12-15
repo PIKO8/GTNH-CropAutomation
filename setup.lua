@@ -15,6 +15,7 @@ local scripts = {
     'storage.lua',
     'util.lua',
     'update.lua',
+    'storageScan.lua',
     'uninstall.lua',
 }
 
