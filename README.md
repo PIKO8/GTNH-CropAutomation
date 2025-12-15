@@ -1,3 +1,12 @@
+# Piko Modified
+- This is a small modification of the original GTNH-CropAutomation currently adding:
+- `config.useAdvancedStorage` is similar to `useStorageFarm= false` but waiting for plants to grow takes place on the storage farm.
+-`config.storageScanInterval` works when useAdvancedStorage is enabled and means once in how many basic cycles(on the work farm) the robot will pass through the storage farm to collect seeds or clean weeds(if any)
+- Added storage.lua for non-streaming storage of farm data. (database.lua is designed to store only the last free slot, while storage.lua stores a table of free slots)
+- Added update.lua
+
+This is a personal modification, so there may be errors.
+
 # Introduction
 
 These OpenComputers (OC) scripts automatically tier-up, stat-up, and spread (duplicate) IC2 crops for you. This guide walks through every step of the process, from building the crop bot to debugging and troubleshooting. No prior knowledege of OC is necessary.
@@ -44,7 +53,7 @@ Lastly, you need a Transvector Binder and Transvector Dislocator which requires 
 7) Follow the commands on screen 'install' --> 'Y' --> 'Y' (The OpenOS floppy disk is no longer needed in the robot afterwards).
 8) Install the required scripts by copying this line of code into the robot (middle-click to paste).
 
-        wget https://raw.githubusercontent.com/DylanTaylor1/GTNH-CropAutomation/main/setup.lua && setup
+        wget https://raw.githubusercontent.com/PIKO8/GTNH-CropAutomation/main/setup.lua && setup
 
 9) Edit the config (not recommended, but check it out) by entering:
 
