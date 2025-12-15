@@ -23,10 +23,7 @@ function update()
     save_config()
     require("uninstall").uninstall(require("setup").scripts)
     local shell = require("shell")
-    shell.execute("wget https://raw.githubusercontent.com/PIKO8/GTNH-CropAutomation/main/setup.lua")
-    package.loaded["setup"] = nil
-    local setup = require("setup")
-    setup.install()
+    shell.execute("wget https://raw.githubusercontent.com/PIKO8/GTNH-CropAutomation/main/setup.lua && setup")
 end
 
 local util = require("util")
