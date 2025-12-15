@@ -14,3 +14,7 @@ if util.is_main({...}, 'uninstall') then
     table.insert(scripts, 'setup.lua')
     uninstall(scripts)
 end
+
+return {
+    uninstall = uninstall
+}
