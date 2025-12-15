@@ -14,6 +14,7 @@ local scripts = {
     'autoSpread.lua',
     'storage.lua',
     'util.lua',
+    'update.lua',
     'uninstall.lua',
 }
 
