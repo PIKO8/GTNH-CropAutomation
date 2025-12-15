@@ -156,6 +156,10 @@ end
 -- Initialize storage on load
 initializeStorage()
 
+if require('util').is_main({...}, 'storage') then
+    storageScan()
+end
+
 return {
     getStorage = getStorage,
     resetStorage = resetStorage,
