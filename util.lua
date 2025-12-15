@@ -5,3 +5,7 @@ function is_main(args, file_name)
     local first = select(1, args)
     return first ~= file_name
 end
+
+return {
+    is_main = is_main
+}
