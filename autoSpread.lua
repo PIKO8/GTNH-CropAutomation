@@ -4,6 +4,7 @@ local gps = require('gps')
 local scanner = require('scanner')
 local config = require('config')
 local events = require('events')
+local util   = require('util')
 local storage
 if config.useAdvancedStorage then
     storage = require('storage')
@@ -53,7 +54,7 @@ local function checkChild(slot, crop)
             elseif stat >= config.autoSpreadThreshold then
 
                 if config.useAdvancedStorage then
-                    if crop.size >= crop.max - 1 then
+                    if util.check_growth(config.waitFullGrowth, crop) then
                         action.harvest()
                         action.placeCropStick(2)
                     elseif storage.hasFreeSlots() then
@@ -67,7 +68,7 @@ local function checkChild(slot, crop)
                     database.addToStorage(crop)
                     action.placeCropStick(2)
 
-                elseif crop.size >= crop.max - 1 then
+                elseif util.check_growth(config.waitFullGrowth, crop) then
                     action.harvest()
                     action.placeCropStick(2)
                 end

@@ -3,6 +3,7 @@
 local gps = require('gps')
 local scanner = require('scanner')
 local config = require('config')
+local util   = require('util')
 
 -- Main storage: key - slot number, value - crop or nil if empty
 local storage = {}
@@ -142,7 +143,7 @@ local function storageScan()
         if scanner.cropAirOrEmpty(crop) and isSlotOccupied(slot) then
             removeFromStorage(slot)
         elseif scanner.cropNonAirOrEmpty(crop) then
-            if scanner.isWeed(crop, 'storage') or crop.size >= crop.max - 1 then
+            if scanner.isWeed(crop, 'storage') or util.check_growth(config.waitFullGrowth) then
                 action.deweed()
                 action.harvest()
                 if isSlotOccupied(slot) then

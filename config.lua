@@ -1,6 +1,9 @@
 local config = {
     -- NOTE: EACH CONFIG SHOULD END WITH A COMMA
 
+    -- if true then `crop.size == crop.max` else `crop.size >= crop.max - 1`
+    waitFullGrowth = false,
+
     -- Side Length of Working Farm
     workingFarmSize = 6,
     -- Side Length of Storage Farm
