@@ -27,7 +27,7 @@ function update()
 end
 
 local util = require("util")
-if util.is_main({...}, "update") then
+if util.is_main(..., "update") then
     update()
 end
 

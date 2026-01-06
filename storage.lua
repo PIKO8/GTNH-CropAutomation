@@ -3,7 +3,6 @@
 local gps = require('gps')
 local scanner = require('scanner')
 local config = require('config')
-local util   = require('util')
 
 -- Main storage: key - slot number, value - crop or nil if empty
 local storage = {}
@@ -134,6 +133,7 @@ end
 
 -- TODO to action.lua?
 local function storageScan()
+    local util   = require('util')
     local action = require('action')
     for slot=1, config.storageFarmArea, 1 do
         os.sleep(0)
@@ -143,7 +143,7 @@ local function storageScan()
         if scanner.cropAirOrEmpty(crop) and isSlotOccupied(slot) then
             removeFromStorage(slot)
         elseif scanner.cropNonAirOrEmpty(crop) then
-            if scanner.isWeed(crop, 'storage') or util.check_growth(config.waitFullGrowth) then
+            if scanner.isWeed(crop, 'storage') or util.check_growth(config.waitFullGrowth, crop) then
                 action.deweed()
                 action.harvest()
                 if isSlotOccupied(slot) then

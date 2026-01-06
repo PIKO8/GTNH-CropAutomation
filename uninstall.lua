@@ -9,7 +9,7 @@ function uninstall(scripts)
 end
 
 local util = require("util")
-if util.is_main({...}, 'uninstall') then
+if util.is_main(..., 'uninstall') then
     local scripts = require('setup').scripts
     table.insert(scripts, 'setup.lua')
     uninstall(scripts)

@@ -47,7 +47,7 @@ function install(repo1, branch1, scripts1)
 end
 
 -- INSTALL
-if is_main(args, 'setup') then
+if is_main(..., 'setup') then
     install( repo, branch, scripts)
 end
 return {
